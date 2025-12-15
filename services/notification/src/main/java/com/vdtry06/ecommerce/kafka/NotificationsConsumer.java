@@ -24,8 +24,8 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationsConsumer {
-    NotificationRepository repository;
-    EmailService emailService;
+    final NotificationRepository repository;
+    final EmailService emailService;
 
     @KafkaListener(topics = "payment-topic")
     public void consumePaymentSuccessNotifications(PaymentConfirmation paymentConfirmation) throws MessagingException {
