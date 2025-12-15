@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerController {
-    CustomerService service;
+    final CustomerService service;
 
     @PostMapping
     public ResponseEntity<String> createCustomer(@RequestBody @Valid CustomerRequest request) {
@@ -32,7 +32,7 @@ public class CustomerController {
         return ResponseEntity.ok(service.findAllCustomers());
     }
 
-    @GetMapping("/exits/{customer-id}")
+    @GetMapping("/exists/{customer-id}")
     public ResponseEntity<Boolean> existsById(@PathVariable("customer-id") String customerId) {
         return ResponseEntity.ok(service.existsById(customerId));
     }
