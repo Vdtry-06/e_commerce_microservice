@@ -5,6 +5,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +19,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductService {
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+    
     ProductRepository repository;
     ProductMapper mapper;
 
+    @Transactional
     public Integer createProduct(ProductRequest request) {
-        var product = mapper.toProduct(request);
-        return repository.save(product).getId();
+        try {
+            logger.info("Creating product: {}", request.name());
+            var product = mapper.toProduct(request);
+            logger.info("Mapped product: id={}, category={}", product.getId(), product.getCategory().getId());
+            var savedProduct = repository.save(product);
+            logger.info("Product saved successfully with id: {}", savedProduct.getId());
+            return savedProduct.getId();
+        } catch (Exception e) {
+            logger.error("Error creating product: ", e);
+            throw new RuntimeException("Failed to create product: " + e.getMessage(), e);
+        }
     }
 
     @Transactional(rollbackFor = ProductPurchaseException.class) // giao dịch hoàn tác nếu có ngoại lệ xảy ra

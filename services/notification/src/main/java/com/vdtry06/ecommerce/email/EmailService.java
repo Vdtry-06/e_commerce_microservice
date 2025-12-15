@@ -26,10 +26,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailService {
-    JavaMailSender mailSender;
-    SpringTemplateEngine templateEngine;
+    final JavaMailSender mailSender;
+    final SpringTemplateEngine templateEngine;
 
     @Async
     public void sendPaymentSuccessEmail(

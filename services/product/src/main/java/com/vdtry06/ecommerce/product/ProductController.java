@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
-    ProductService service;
+    final ProductService service;
 
     @PostMapping
     public ResponseEntity<Integer> createProduct(@RequestBody @Valid ProductRequest request) {

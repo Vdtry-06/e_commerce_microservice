@@ -19,16 +19,19 @@ public class PaymentService {
     public Integer createPayment(PaymentRequest request) {
         var payment = repository.save(mapper.toPayment(request));
 
-        notificationProducer.sendNotification(
-                new PaymentNotificationRequest(
-                        request.orderReference(),
-                        request.amount(),
-                        request.paymentMethod(),
-                        request.customer().firstName(),
-                        request.customer().lastName(),
-                        request.customer().email()
-                )
-        );
+        // Send notification only if customer exists
+        if (request.customer() != null) {
+            notificationProducer.sendNotification(
+                    new PaymentNotificationRequest(
+                            request.orderReference(),
+                            request.amount(),
+                            request.paymentMethod(),
+                            request.customer().firstName(),
+                            request.customer().lastName(),
+                            request.customer().email()
+                    )
+            );
+        }
 
         return payment.getId();
     }
